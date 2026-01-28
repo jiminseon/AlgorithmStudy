@@ -6,15 +6,33 @@ public class Main {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
-        String[] croatias = {"c=", "c-", "dz=", "d-", "lj", "nj", "s=", "z="};
+        int len = input.length();
 
-        for (int i = 0; i < croatias.length; i++) {
-            if (input.contains(croatias[i])) {
-                input = input.replace(croatias[i], "a");
+        int count = 0;
+        for (int i = 0; i < len; i++) {
+            char c = input.charAt(i);
+            if (c == 'c' && i < len - 1) {
+                if (input.charAt(i+1) == '=' || input.charAt(i+1) == '-') {
+                    i++;
+                }
+            } else if (c == 'd' && i < len - 1) {
+                if (i < len - 2 && input.charAt(i+1) == 'z' && input.charAt(i+2) == '=') {
+                    i += 2;
+                } else if (input.charAt(i+1) == '-') {
+                    i++;
+                }
+            } else if ((c == 'l' || c == 'n') && i < len - 1) {
+                if (input.charAt(i + 1) == 'j') {
+                    i++;
+                }
+            } else if ((c == 's' || c == 'z') && i < len - 1) {
+                if (input.charAt(i + 1) == '=') {
+                    i++;
+                }
             }
+            count++;
         }
-        System.out.print(input.length());
-        br.close();
+        System.out.print(count);
 
     }
 
