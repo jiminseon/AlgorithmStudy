@@ -1,34 +1,34 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.PriorityQueue;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         int n = Integer.parseInt(br.readLine());
-        PriorityQueue<Integer> q = new PriorityQueue<>((o1, o2) -> { //(최소힙)
-            int first = Math.abs(o1);
-            int second = Math.abs(o2);
-            if (first == second) {
-                return o1 > o2 ? 1 : -1; //1일때 순서 바꾸고 -1일때는 순서 보존
+        PriorityQueue<Integer> list = new PriorityQueue<>((a, b) -> {
+            int absA = Math.abs(a);
+            int absB = Math.abs(b);
+
+            if (absA == absB) {
+                return a < b ? -1 : 1;
             }
-            else {
-                return first - second; //양수면 순서 바꾸고 음수면 보존
-            }
+            return absA - absB;
         });
-        
         for (int i = 0; i < n; i++) {
-            int request = Integer.parseInt(br.readLine());
-            if (request == 0) {
-                if (q.isEmpty()) {
-                    System.out.println("0");
+            int input = Integer.parseInt(br.readLine());
+
+            if (input == 0) {
+                if (list.isEmpty()) {
+                    sb.append("0\n");
                 } else {
-                    System.out.println(q.poll());
+                sb.append(list.poll() + "\n");
                 }
             } else {
-                q.add(request);
+                list.offer(input);
             }
         }
+        System.out.print(sb);
+
     }
 }
