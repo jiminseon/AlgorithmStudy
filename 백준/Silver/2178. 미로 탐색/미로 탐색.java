@@ -1,62 +1,54 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-
-    static int[][] map;
-    static int n;
-    static int m;
-    static boolean[][] visited;
-    static int[] dx = { -1, 1, 0, 0 }; //x방향배열-상하
-    static int[] dy = { 0, 0, -1, 1 }; //y방향배열-좌우
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
 
-        map = new int[n][m];
-        for(int i=0; i<n; i++) {
-            String s = br.readLine();
-            for(int j=0; j<m; j++) {
-                map[i][j] = s.charAt(j) - '0';
+        int[][] miro = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            String input = br.readLine();
+            for (int j = 0; j < m; j++) {
+                miro[i][j] = input.charAt(j) - '0';
             }
         }
 
-        visited = new boolean[n][m];
-        visited[0][0] = true;
-        bfs(0, 0);
-        System.out.println(map[n-1][m-1]);
+        int result = bfs(miro, 0, 0, n, m);
+        System.out.print(result);
+
     }
 
-    public static void bfs(int x, int y) {
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[] {x,y});
+    static int bfs(int[][] miro, int sr, int sc, int n, int m) {
+        int[] dr = {0, 0, 1, -1};
+        int[] dc = {1, -1, 0, 0};
+        Queue<int[]> q = new ArrayDeque<>();
+        boolean[][] visited = new boolean[n][m];
+        visited[sr][sc] = true;
+        q.offer(new int[]{sr, sc, 1});
 
-        while(!q.isEmpty()) {
-            int now[] = q.poll();
-            int nowX = now[0];
-            int nowY = now[1];
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            int r = cur[0];
+            int c = cur[1];
+            int dist = cur[2];
 
-            for(int i=0; i<4; i++) {
-                int nextX = nowX + dx[i];
-                int nextY = nowY + dy[i];
-
-                if (nextX < 0 || nextY < 0 || nextX >= n || nextY >= m)
-                    continue;
-                if (visited[nextX][nextY] || map[nextX][nextY] == 0)
-                    continue;
-
-                q.add(new int[] {nextX, nextY});
-                map[nextX][nextY] = map[nowX][nowY] + 1;
-                visited[nextX][nextY] = true;
+            if (r == n - 1 && c == m - 1) {
+                return dist;
+            }
+            for (int i = 0; i < 4; i++) {
+                int nr = r + dr[i];
+                int nc = c + dc[i];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m) {
+                    if (!visited[nr][nc] && miro[nr][nc] == 1) {
+                        q.offer(new int[]{nr, nc, dist+1});
+                        visited[nr][nc] = true;
+                    }
+                }
             }
         }
+        return 1;
     }
 }
